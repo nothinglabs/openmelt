@@ -21,6 +21,7 @@
 // Build 12 - 1/07/11	Fixed minor logic error - should not effect performance
 // Build 20 - 8/25/11	Integrated brushless support, removed support for old-style "non-B" Baby Orangutan, documentation updates (be sure use_pwm_esc is set correctly!)
 
+// Project added to github on 3/12/13
 
 // Pre-build: Verify pin assignments are for correct for "B" style Baby Orangutan
 
