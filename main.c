@@ -1116,10 +1116,6 @@ void do_spin_180(int spin_cycle)
 	}
 
 }
-//OCR2A on own not happy
-//OCR2B on own yes happy!
-// swappping pins to ESCs solves issue
-	//therefore is motor / esc issue
 
 
 void motors_brake(void)
