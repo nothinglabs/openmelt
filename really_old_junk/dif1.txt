@@ -1,0 +1,185 @@
+Comparing files mbh2.bas and MYFLY.BAS
+***** mbh2.bas
+Const Min_rpm = 0                                           'minimum RPM for translation / throttling to kick in
+
+***** MYFLY.BAS
+Const Min_rpm = 250                                         'minimum RPM for translation / throttling to kick in
+
+*****
+
+***** mbh2.bas
+
+Const Throttle_percent_max = 90                             'throttle max (for flight - maximizes translation)
+'Const Throttle_percent_max = 100                            'throttle maxes at 100% (normal - allows less translation / higher
+top speed)
+
+***** MYFLY.BAS
+
+'Const Throttle_percent_max = 50                             'throttle max (for flight - maximizes translation)
+Const Throttle_percent_max = 100                            'throttle maxes at 100% (normal - allows less translation / higher 
+op speed)
+
+*****
+
+***** mbh2.bas
+'Const Throttle_percent_min = 50                             'throttle starts higher (for flight)
+Const Throttle_percent_min = 90                             'throttle starts at 0% (normal)
+
+***** MYFLY.BAS
+'Const Throttle_percent_min = 50                             'throttle starts higher (for flight)
+Const Throttle_percent_min = 0                              'throttle starts at 0% (normal)
+
+*****
+
+***** mbh2.bas
+
+
+
+   Power_kill_length = 28.45 * Radius                       'calculate RPM from G's  - rpm  = (G/(28.45* radius ))^0.5 *1000
+   Power_kill_length = G / Rpm
+   Rpm = Rpm ^ .5
+***** MYFLY.BAS
+
+   Rpm = 28.45 * Radius                                     'calculate RPM from G's  - rpm  = (G/(28.45* radius ))^0.5 *1000
+   Rpm = G / Rpm
+   Rpm = Rpm ^ .5
+*****
+
+***** mbh2.bas
+
+   'testing!!!
+
+'Rpm = 100
+
+
+   If Rpm > Max_rpm Then Max_rpm = Rpm
+***** MYFLY.BAS
+
+   If Rpm > Max_rpm Then Max_rpm = Rpm
+*****
+
+***** mbh2.bas
+Sub Motors_left
+      Portd.3 = 0                                           '0
+      Portd.4 = 0                                           '1
+
+***** MYFLY.BAS
+Sub Motors_left
+      Portd.3 = 1
+      Portd.4 = 1
+End Sub
+
+*****
+
+***** mbh2.bas
+
+End Sub
+***** MYFLY.BAS
+
+Sub Motor1_on
+      Portd.3 = 1
+      Portd.4 = 0
+End Sub
+*****
+
+***** mbh2.bas
+
+Sub Motor1_on
+
+      Portd.3 = 0                                           '0
+      Portd.4 = 0                                           '1
+
+If Forward = 1 Or Backward = 1 Then
+      Portd.3 = 0                                           '0
+      Portd.4 = 1                                           '1
+      Toggle Portd.5
+End If
+
+***** MYFLY.BAS
+
+Sub Motor2_on
+      Portd.3 = 0
+      Portd.4 = 1
+End Sub
+
+*****
+
+***** mbh2.bas
+
+End Sub
+
+***** MYFLY.BAS
+
+
+*****
+
+***** mbh2.bas
+
+Sub Motor2_on
+
+'testing for multi-wheel drift - motor only on when going forward
+
+      Portd.3 = 0                                           '0
+      Portd.4 = 0                                           '1
+
+'If Forward = 1 Or Backward = 1 Then
+'      Portd.3 = 1                                           '0
+'      Portd.4 = 0                                           '1
+'      Toggle Portd.5
+'End If
+
+End Sub
+
+***** MYFLY.BAS
+
+'Reads RC data - triggered by RCINT anytime one of the RC pins goes high or low
+'Uses timers to determine how long since the signal went high
+Rc_change:
+
+'valid range 50 to 200
+
+   If Pinb.4 <> Forwardback_hilow Then
+
+      If Pinb.4 = 0 Then                                    'did the pin go low? - then set timer value as value for this chann
+l...
+         Forwardback = Timer0
+      End If
+
+*****
+
+***** mbh2.bas
+
+
+
+'Reads RC data - triggered by RCINT anytime one of the RC pins goes high or low
+'Uses timers to determine how long since the signal went high
+Rc_change:
+
+'valid range 50 to 200
+
+   If Pinb.4 <> Forwardback_hilow Then
+
+      If Pinb.4 = 0 Then                                    'did the pin go low? - then set timer value as value for this chann
+l...
+         Forwardback = Timer0
+      End If
+***** MYFLY.BAS
+
+      If Pinb.4 = 1 Then                                    'did the pin go high? - then reset timer...
+         Timer0 = 0
+      End If
+*****
+
+***** mbh2.bas
+
+
+      If Pinb.4 = 1 Then                                    'did the pin go high? - then reset timer...
+         Timer0 = 0
+      End If
+
+   End If
+***** MYFLY.BAS
+
+   End If
+*****
+

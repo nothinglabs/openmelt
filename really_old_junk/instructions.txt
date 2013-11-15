@@ -1,0 +1,53 @@
+Driving:
+
+Forward / Back are non-proportional
+Left / Right is proportional
+Throttle controls speed of rotation
+Heading LED changes from solid to dashed at half-throttle
+Best translation speed occurs at roughly half-throttle or below
+
+Config Mode:
+
+To enter or exit config mode hold the control stick towards the upper right for a few seconds while at zero throttle (the LED will start pulse-flashing).
+
+Upon entering configuration mode the bot will note and store the "zero" value for the accelerometer (so - the bot should be roughly level).
+
+Adjusting Tracking:
+Move the throttle to about 25% - and the bot will start spinning.
+
+The LED should be dashed (if it's not - lower the throttle position until it is).
+
+Move the control stick left / right until tracking looks good (the LED will temporarily change to solid to confirm it's being adjusted).
+
+
+Notes:
+The current system assumes counter-clockwise bot rotation and that Ailerons (Left / Right) are set to reverse.
+
+Config mode also allows for "heading" (which way is forward) adjustment - but it's confusing enough where we may just want to set this "in code."
+
+Pulling the control sick back while throttle is at zero will cause the bot to flash out the max RPM from the last run
+
+If the bot thinks it has a good RX link -and- Left / Right control is centered - it will flash the status LED quickly (if it's not - try adjusting the trim).
+
+While trying to spin slowly - it can be easy to inadvertently go to zero throttle and think something has gone wrong.
+
+If the bot stops for no reason - it may be a receiver issue (possibly from impact).  Powering down the transmitter for a second or two - then turning it back on may resolve.
+
+
+-----------
+
+Heading alignment:
+
+Go into configmode
+
+Go to full throttle
+
+When moving forward calibration is off (normal drive test)
+
+Steer left / right without going forward / back to adjust heading
+
+	Moving the stick moves the LED beacon in the same direction
+	
+	
+
+	2 seconds = about 90 degree rotation

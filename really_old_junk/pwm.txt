@@ -1,0 +1,29 @@
+Sub Normal_drive
+
+   Motors_off
+
+   Pulsein Rcread , Pinb , 4 , 1
+   If Rcread > 170 And Rcread < 350 Then
+       Motors_forward
+       Call Pwm(2 , 150)
+   End If
+
+   Pulsein Rcread , Pinb , 4 , 1
+   If Rcread < 150 And Rcread > 50 Then
+      Motors_back
+      Call Pwm(2 , 150)
+   End If
+
+   Pulsein Rcread , Pinb , 3 , 1
+   If Rcread < 150 And Rcread > 50 Then
+      Motors_left
+      Call Pwm(2 , 150)
+   End If
+
+   Pulsein Rcread , Pinb , 3 , 1
+   If Rcread > 170 And Rcread < 350 Then
+      Motors_right
+      Call Pwm(2 , 150)
+   End If
+
+End Sub

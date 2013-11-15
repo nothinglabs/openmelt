@@ -1,0 +1,15 @@
+'portc.1 motor 1 direction
+'portc.2 motor 1 direction
+'portc.0 motor 1 enable
+
+'portc.4 motor 2 direction
+'portc.5 motor 2 direction
+'portc.3 motor 2 enable
+
+'portd.4 LED
+
+'portb.0 - Throttle  (124 = low, 190 = high)
+'portb.3 - Left / Right (124 = left, 160 = center, 190 = right)
+'portb.4 - Forward / Back (124 = forward, 158 = center, 190 = back)
+
+'adc.6 accelerometer

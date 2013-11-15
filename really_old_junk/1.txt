@@ -1,0 +1,360 @@
+Comparing files postfinal.bas and MB_FINAL_PUB_RELEASE.BAS
+***** postfinal.bas
+'portb.4 - Forward / Back (145 = forward, 114 = center, 83 = back)
+'portb.5 - Rudder (425 = left, 469 = center, 541 = right)
+
+
+***** MB_FINAL_PUB_RELEASE.BAS
+'portb.4 - Forward / Back (145 = forward, 114 = center, 83 = back)
+
+*****
+
+***** postfinal.bas
+Dim Add_delay As Single                                     'used to calculate changes in heading
+Dim Exponential As Single                                   'add_delay is raised to the power of this variable for exponential 
+teering
+
+***** MB_FINAL_PUB_RELEASE.BAS
+Dim Add_delay As Single                                     'used to calculate changes in heading
+
+*****
+
+***** postfinal.bas
+Dim Leftright As Integer                                    'heading RC channel
+Dim Rudder As Integer                                       'rudder RC channel
+Dim Forwardback As Integer                                  'forward/back RC channel
+***** MB_FINAL_PUB_RELEASE.BAS
+Dim Leftright As Integer                                    'heading RC channel
+Dim Forwardback As Integer                                  'forward/back RC channel
+*****
+
+***** postfinal.bas
+
+Dim Left_strafe As Boolean
+Dim Right_strafe As Boolean
+
+
+Dim Shutdown As Integer                                     'if set to 1 - robot goes into safety mode
+***** MB_FINAL_PUB_RELEASE.BAS
+
+Dim Shutdown As Integer                                     'if set to 1 - robot goes into safety mode
+*****
+
+***** postfinal.bas
+Dim Leftright_hilow As Boolean
+Dim Rudder_hilow As Boolean
+
+Dim Leftright_last As Integer                               'track value of timer upon going high
+Dim Rudder_last As Integer
+
+
+***** MB_FINAL_PUB_RELEASE.BAS
+Dim Leftright_hilow As Boolean
+
+*****
+
+***** postfinal.bas
+On Pcint0 Rc_change                                         'call RC_change anytime RC pins go up or down
+Pcmsk0 = &B00111001                                         'sets mask so that only RC pins trigger interrupt
+'Pcmsk0 = &B11111111                                         'sets mask so that only RC pins trigger interrupt
+
+***** MB_FINAL_PUB_RELEASE.BAS
+On Pcint0 Rc_change                                         'call RC_change anytime RC pins go up or down
+Pcmsk0 = &B00011001                                         'sets mask so that only RC pins trigger interrupt
+
+*****
+
+***** postfinal.bas
+
+Exponential = 1.14                                          'greater number = more exponential steering
+
+Const Heading_center = 477                                  'center value for heading
+Const Heading_leftthresh = 475                              'center - 2
+Const Heading_rightthresh = 479                             'center + 2
+
+Const Rudder_center = 475                                   'center value for rudder
+Const Rudder_leftthresh = 495                               'center + 20
+Const Rudder_rightthresh = 455                              'center - 20
+
+***** MB_FINAL_PUB_RELEASE.BAS
+
+Const Heading_center = 477                                  'center value for heading
+Const Heading_leftthresh = 472                              'center - 5
+Const Heading_rightthresh = 482                             'center + 5
+
+*****
+
+***** postfinal.bas
+
+
+
+While A = 1                                                 'main loop
+***** MB_FINAL_PUB_RELEASE.BAS
+
+While A = 1                                                 'main loop
+*****
+
+***** postfinal.bas
+      'used to help debug if center is off
+      If Leftright > Heading_rightthresh Then Waitms 200
+      If Leftright < Heading_leftthresh Then Waitms 200
+
+***** MB_FINAL_PUB_RELEASE.BAS
+      'used to help debug if center is off
+      If Leftright > Heading_rightthresh Then Waitms 100
+      If Leftright < Heading_leftthresh Then Waitms 100
+
+*****
+
+***** postfinal.bas
+
+   Low_voltage_cutoff = Full_charge_voltage * 75            'low_voltage_cutoff is 75% of full charge voltage
+   Low_voltage_cutoff = Low_voltage_cutoff / 100
+***** MB_FINAL_PUB_RELEASE.BAS
+
+   Low_voltage_cutoff = Full_charge_voltage * 75            'low_voltage_cutoff is 82% of full charge voltage
+   Low_voltage_cutoff = Low_voltage_cutoff / 100
+*****
+
+***** postfinal.bas
+
+
+'strafing (disabled)
+
+'If Rudder > Rudder_leftthresh Then
+'   If Left_strafe = 0 Then Periodms = Periodms * 1.25       'one time adjustment to turn 45 degrees
+'   Left_strafe = 1
+'   Forward = 1
+'Else
+'   If Left_strafe = 1 Then Periodms = Periodms * .8         'correct for prior straffing
+'   Left_strafe = 0
+'End If
+
+***** MB_FINAL_PUB_RELEASE.BAS
+
+   Delaytime_single = Periodms / 2                          'sets period in MS for each half of spin
+
+'converts throttle reading from remote into percentage (Throttle - 87 = low, 115 = middle, 148 = high)
+   Throttle_percent = Throttle - 90
+   Throttle_percent = Throttle_percent * 2
+   If Throttle_percent > 100 Then Throttle_percent = 100    'don't got over 100%
+
+*****
+
+***** postfinal.bas
+
+'If Rudder < Rudder_rightthresh Then
+'   If Right_strafe = 0 Then Periodms = Periodms * .75       'one time adjustment to turn 45 degrees
+'   Right_strafe = 1
+'   Forward = 1
+'Else
+'   If Right_strafe = 1 Then Periodms = Periodms * 1.34      'correct for prior straffing
+'   Right_strafe = 0
+'End If
+
+***** MB_FINAL_PUB_RELEASE.BAS
+
+'driver moves stick left and right until the bot tracks correctly
+'data is written into eprom next time the robot spins down
+
+   In_tracking_adjust = 0
+
+*****
+
+***** postfinal.bas
+
+
+   Delaytime_single = Periodms / 2                          'sets period in MS for each half of spin
+
+'converts throttle reading from remote into percentage (Throttle - 87 = low, 115 = middle, 148 = high)
+   Throttle_percent = Throttle - 90
+   Throttle_percent = Throttle_percent * 2
+   If Throttle_percent > 100 Then Throttle_percent = 100    'don't got over 100%
+
+***** MB_FINAL_PUB_RELEASE.BAS
+
+If Configmode = 1 Then Throttle_percent = 37                'ignore throttle if in configmode
+
+                            'tracking adjustment - if throttle is between 1/3 and 1/2 and in configmode - go into tracking adju
+tment mode
+   If Configmode = 1 And Throttle < 100 Then
+
+*****
+
+***** postfinal.bas
+
+'driver moves stick left and right until the bot tracks correctly
+'data is written into eprom next time the robot spins down
+
+   In_tracking_adjust = 0
+
+
+If Configmode = 1 Then Throttle_percent = 36                'ignore throttle if in configmode
+
+                            'tracking adjustment - if throttle is between 1/3 and 1/2 and in configmode - go into tracking adju
+tment mode
+   If Configmode = 1 And Throttle < 100 Then
+
+
+          In_tracking_adjust = 1
+***** MB_FINAL_PUB_RELEASE.BAS
+
+          In_tracking_adjust = 1
+*****
+
+***** postfinal.bas
+        Add_delay = Add_delay * Delaytime_single
+
+        Add_delay = Power(add_delay , Exponential)          'yes - this shouldn't work for negative numbers - but in this langu
+ge it does...
+
+        Add_delay = Add_delay / 7700
+
+        Delaytime_single = Delaytime_single + Add_delay
+***** MB_FINAL_PUB_RELEASE.BAS
+        Add_delay = Add_delay * Delaytime_single
+        Add_delay = Add_delay / 2300
+        Delaytime_single = Delaytime_single + Add_delay
+*****
+
+***** postfinal.bas
+
+       If G > Max_g And Throttle_percent > 40 Then Throttle_percent = 40       'if we're over max RPM for translation - reduce 
+hrottle
+
+***** MB_FINAL_PUB_RELEASE.BAS
+
+       If G > Max_g Then Throttle_percent = 30              'if we're over max RPM for translation - reduce throttle
+
+*****
+
+***** postfinal.bas
+
+
+   Enable Interrupts                                        'out of all the critical stuff
+***** MB_FINAL_PUB_RELEASE.BAS
+
+   Enable Interrupts                                        'out of all the critical stuff
+*****
+
+***** postfinal.bas
+
+   If Pinb.0 <> Throttle_hilow Then
+
+      If Pinb.0 = 0 Then
+
+         If Timer2 < 200 Then                               'only set if within bounds
+            If Timer2 > 50 Then
+               Throttle = Timer2
+            End If
+***** MB_FINAL_PUB_RELEASE.BAS
+
+
+   If Pinb.3 <> Leftright_hilow Then
+
+      If Pinb.3 = 0 Then
+
+         If Timer1 < 650 Then                               'only set if within bounds
+            If Timer1 > 300 Then
+               Leftright = Timer1
+            End If
+*****
+
+***** postfinal.bas
+
+      End If
+***** MB_FINAL_PUB_RELEASE.BAS
+
+
+      End If
+*****
+
+***** postfinal.bas
+
+      If Pinb.0 = 1 Then
+         Timer2 = 0
+      End If
+***** MB_FINAL_PUB_RELEASE.BAS
+
+      If Pinb.3 = 1 Then
+         Timer1 = 0
+      End If
+*****
+
+***** postfinal.bas
+
+'these two are a bit different since they share the same 16-bit timer
+
+   If Pinb.3 <> Leftright_hilow Then
+
+      If Pinb.3 = 0 Then
+         If Timer1 > Leftright_last Then Leftright = Timer1 - Leftright_last       'if the timer overflowed - just discard it
+      End If
+***** MB_FINAL_PUB_RELEASE.BAS
+
+
+   If Pinb.0 <> Throttle_hilow Then
+
+      If Pinb.0 = 0 Then
+
+         If Timer2 < 200 Then                               'only set if within bounds
+            If Timer2 > 50 Then
+               Throttle = Timer2
+            End If
+         End If
+
+      End If
+*****
+
+***** postfinal.bas
+
+      If Pinb.3 = 1 Then
+         Leftright_last = Timer1
+      End If
+***** MB_FINAL_PUB_RELEASE.BAS
+
+      If Pinb.0 = 1 Then
+         Timer2 = 0
+      End If
+*****
+
+***** postfinal.bas
+
+
+   If Pinb.5 <> Rudder_hilow Then
+
+      If Pinb.5 = 0 Then
+         If Timer1 > Rudder Then Rudder = Timer1 - Rudder_last       'if the timer overflowed - just discard it
+      End If
+
+***** MB_FINAL_PUB_RELEASE.BAS
+
+   Throttle_hilow = Pinb.0                                  'make note of all pin states for reference next time interrupt is t
+iggered...
+   Forwardback_hilow = Pinb.4
+   Leftright_hilow = Pinb.3
+
+*****
+
+***** postfinal.bas
+
+      If Pinb.5 = 1 Then
+         Rudder_last = Timer1
+      End If
+
+   End If
+
+
+   Throttle_hilow = Pinb.0                                  'make note of all pin states for reference next time interrupt is t
+iggered...
+   Forwardback_hilow = Pinb.4
+   Leftright_hilow = Pinb.3
+   Rudder_hilow = Pinb.5
+
+
+Return
+***** MB_FINAL_PUB_RELEASE.BAS
+
+Return
+*****
+

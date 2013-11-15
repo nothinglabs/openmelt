@@ -1,0 +1,45 @@
+Sub Motors_break1
+      'motor 1 direction
+      Portc.1 = 0
+      Portc.2 = 0
+
+      'motor 2 direction
+      Portc.4 = 0
+      Portd.0 = 1
+End Sub
+
+
+Sub Motors_break2
+      'motor 1 direction
+      Portc.1 = 0
+      Portc.2 = 1
+
+      'motor 2 direction
+      Portc.4 = 0
+      Portd.0 = 0
+End Sub
+
+
+   Motors_off
+
+   Read_rc
+
+   If Forwardback > 170 And Forwardback < 350 Then
+       Motors_forward
+       Call Pwm(2 , 150)
+   End If
+
+   If Forwardback < 150 And Forwardback > 50 Then
+      Motors_back
+      Call Pwm(2 , 150)
+   End If
+
+   If Leftright < 150 And Leftright > 50 Then
+      Motors_left
+      Call Pwm(2 , 150)
+   End If
+
+   If Leftright > 170 And Leftright < 350 Then
+      Motors_right
+      Call Pwm(2 , 150)
+   End If
