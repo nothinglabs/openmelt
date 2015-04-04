@@ -249,6 +249,7 @@
 
 // Entering Config Mode
 // Before entering config mode:
+
 //		1. The robot needs to be spun-down and flat 
 //			The "zero" value for the accelerometer will automatically be recorded when entering config mode
 //			If the robot is sitting at a slight angle - that's probably OK
@@ -375,7 +376,7 @@
 float timer_ticks_per_ms = 312.5;							//change this value if chip speed isn't 20mhz
 
 //following values are only for brushless / PWM ESC support
-int use_pwm_esc = 1;										//are we using a brushless speed controller(s)?
+int use_pwm_esc = 0;										//are we using a brushless speed controller(s)?
 
 //pwm lengths for brushless in units of 13 microseconds (about)
 //pwm_throttle_low should allow for some motor power - doing full stop of motor doesn't seem to work
@@ -434,7 +435,7 @@ float turn_speed = .0009; 		                           	//greater number = faste
 long x;                                           		  	//general loop variable
 
 unsigned int accel_raw_data;                           	//raw accelerometer data
-float accel_read;                               	      	//single used to store accelerometer data
+float running_average_accel_read = 0;                               	      	//single used to store accelerometer data
 
 float delay_loop;                              	       	//used to add extra delay
 
@@ -535,6 +536,7 @@ void get_config_constants(void);
 void load_config(void);
 void save_config(void);
 void reset_rc(void);
+float get_averaged_accel(float average_count, int us_delay);
 
 int main(void)
 {
@@ -601,6 +603,7 @@ void safety_and_idle(void)
 
 
 		motors_brake();			//motors are off (braked if pwm) while sitting idle
+		running_average_accel_read = 0;  //running average for accel reset to 0
 
 		if (throttle < throttle_low || throttle > (throttle_high + 100)) throttle_up_count = 0;		//single low / bad throttle resets the counter to 0
 		if (throttle > throttle_low && throttle < (throttle_high + 100)) throttle_up_count ++;		//if the throttle has been moved high - increment the counter
@@ -746,14 +749,7 @@ void get_config_constants(void)
 {
 
 	// sample and set the accelerometer base value (average a bunch of samples)
-
-	base_accel = 0;
-	for (x = 0; x < 20; x++)
-	{
-		base_accel = base_accel + read_adc();               				//get accel data
-		_delay_ms(10);
-	}
-	base_accel = base_accel / 20;
+	base_accel = get_averaged_accel(20, 10000);
 
 
 	// sample and set the left / right center value for the control stick (average a bunch of samples)
@@ -868,6 +864,20 @@ void setup(void)
 }
 
 
+float get_averaged_accel(float average_count, int us_delay) {
+	
+	float averaged_accel = 0;
+	for (int loop = 0; loop < average_count; loop++)
+	{
+		averaged_accel = averaged_accel + read_adc() / average_count;
+		
+		//delay samples over time to reduce noise
+		if (us_delay !=0) _delay_us(us_delay);
+	}
+
+	return (averaged_accel);
+}
+
 
 void main_calculations(void)
 
@@ -884,12 +894,16 @@ void main_calculations(void)
 	if ( forwardback < (forwardback_center + forwardback_backthresh)) backward = 1; else backward = 0;
 
 	flashy_led = 0;											//by default LED isn't flashy
-
-	accel_raw_data = read_adc();               				//get accel data
 	
-	accel_read = accel_raw_data;                              //move it over to single in case we want to do floating point
-	accel_read = accel_read - base_accel;                     //compensate for base (2.5v) level
-	g = accel_read * g_per_adc_increment;                    //convert to g's
+	//initial accel_read without moving average
+	if (running_average_accel_read == 0) {
+		running_average_accel_read = get_averaged_accel(4, 20);}
+	else {
+		//use moving average for accel data (causes slight delay in response to RPM change - but makes tracking more stable)
+		running_average_accel_read = (running_average_accel_read * 0.6f) + (get_averaged_accel(4, 20) * 0.4f);}
+	
+	
+	g = (running_average_accel_read - base_accel) * g_per_adc_increment;     //compensate for base (2.5v) level and convert to g's
 
 	rpm = g * 89445;                                //calculate RPM from g's - derived from "G = 0.00001118 * r * RPM^2"
 	rpm = rpm / radius;
